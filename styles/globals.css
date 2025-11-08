@@ -154,3 +154,53 @@ main {
   animation: fadeInUp 0.5s ease-out forwards;
   opacity: 0;
 }
+
+/* Announcement feed card similar to marketplace listings */
+.announcement-card {
+  display: flex;
+  align-items: flex-start;
+  background-color: var(--color-card);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  gap: 0.75rem;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.announcement-card:hover {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.announcement-image img {
+  border-radius: var(--border-radius);
+  object-fit: cover;
+}
+
+.announcement-content h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  color: var(--color-text);
+}
+
+.announcement-content p {
+  margin: 0 0 0.5rem 0;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.announcement-content a {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  background-color: var(--color-primary);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  transition: background-color 0.2s ease;
+}
+
+.announcement-content a:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+}

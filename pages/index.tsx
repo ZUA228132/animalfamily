@@ -50,8 +50,8 @@ export default function Home() {
       <div className="container">
         {/* Banner placeholder. In production you would fetch banner data from Supabase. */}
         <Banner
-          title="Help a friend find home"
-          subtitle="Post about lost pets or adoption opportunities"
+          title="Помогите найти дом"
+          subtitle="Публикуйте объявления о потерянных питомцах и возможностях усыновления"
           imageUrl={undefined}
           link={undefined}
         />
@@ -71,9 +71,9 @@ export default function Home() {
         ) : (
           <div className="map-placeholder">Loading map…</div>
         )}
-        <h2 style={{ marginTop: '1rem' }}>Latest announcements</h2>
+        <h2 style={{ marginTop: '1rem' }}>Последние объявления</h2>
         {announcements.length === 0 && (
-          <p>No announcements available yet. Be the first to post!</p>
+          <p>Пока объявлений нет. Будьте первым!</p>
         )}
         {announcements.map((ann) => (
           <div key={ann.id} className="card fade-in">

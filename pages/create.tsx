@@ -36,7 +36,7 @@ export default function CreateAnnouncementPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!title) {
-      alert('Please provide a title for your announcement.');
+      alert('Пожалуйста, укажите заголовок объявления.');
       return;
     }
     setSubmitting(true);
@@ -53,9 +53,9 @@ export default function CreateAnnouncementPage() {
       }
       const { error } = await supabase.from('announcements').insert(payload);
       if (error) {
-        alert('Failed to save announcement: ' + error.message);
+        alert('Не удалось сохранить объявление: ' + error.message);
       } else {
-        alert('Announcement submitted for moderation. Thank you!');
+        alert('Объявление отправлено на модерацию. Спасибо!');
         setTitle('');
         setDescription('');
       }
@@ -71,11 +71,11 @@ export default function CreateAnnouncementPage() {
     <main>
       <Header />
       <div className="container">
-        <h2>Create Announcement</h2>
+        <h2>Создать объявление</h2>
         <form onSubmit={handleSubmit} className="card" style={{ padding: '1rem' }}>
           <div style={{ marginBottom: '0.5rem' }}>
             <label>
-              Title
+              Заголовок
               <br />
               <input
                 type="text"
@@ -88,7 +88,7 @@ export default function CreateAnnouncementPage() {
           </div>
           <div style={{ marginBottom: '0.5rem' }}>
             <label>
-              Description
+              Описание
               <br />
               <textarea
                 value={description}
@@ -101,17 +101,17 @@ export default function CreateAnnouncementPage() {
           <div style={{ marginBottom: '0.5rem' }}>
             {lat !== null && lng !== null ? (
               <>
-                <p>Your location: {lat.toFixed(5)}, {lng.toFixed(5)}</p>
+                <p>Ваше местоположение: {lat.toFixed(5)}, {lng.toFixed(5)}</p>
                 {/* Show a small map with the user's location */}
                 <div style={{ height: '200px', borderRadius: '8px', overflow: 'hidden' }}>
                   <Map
                     center={[lat, lng] as [number, number]}
-                    markers={[{ position: [lat, lng] as [number, number], label: 'You' }]}
+                    markers={[{ position: [lat, lng] as [number, number], label: 'Вы' }]}
                   />
                 </div>
               </>
             ) : (
-              <p>Enable location services to include your position.</p>
+              <p>Разрешите доступ к геолокации, чтобы добавить вашу позицию.</p>
             )}
           </div>
           <button
@@ -119,7 +119,7 @@ export default function CreateAnnouncementPage() {
             disabled={submitting}
             style={{ padding: '0.5rem 1rem', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: '4px' }}
           >
-            {submitting ? 'Submitting…' : 'Submit'}
+            {submitting ? 'Отправка…' : 'Отправить'}
           </button>
         </form>
       </div>

@@ -19,8 +19,8 @@ export default function AdminPage() {
       <main>
         <Header />
         <div className="container">
-          <h2>Admin Panel</h2>
-          <p>You do not have permission to view this page.</p>
+          <h2>Админ панель</h2>
+          <p>У вас нет доступа к этой странице.</p>
         </div>
         <FooterNav />
       </main>
@@ -80,29 +80,29 @@ export default function AdminPage() {
     <main>
       <Header />
       <div className="container">
-        <h2>Admin Panel</h2>
+        <h2>Админ панель</h2>
         <section style={{ marginBottom: '2rem' }}>
-          <h2>Pending announcements</h2>
-          {pending.length === 0 && <p>No announcements require moderation.</p>}
+          <h2>Объявления на модерации</h2>
+          {pending.length === 0 && <p>Нет объявлений, требующих модерации.</p>}
           {pending.map((ann) => (
             <div key={ann.id} className="card">
               <h3>{ann.title}</h3>
               <p>{ann.description}</p>
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                <button onClick={() => approve(ann.id)}>Approve</button>
+                <button onClick={() => approve(ann.id)}>Одобрить</button>
                 <button onClick={() => reject(ann.id)} style={{ background: '#ffd1d1' }}>
-                  Reject
+                  Отклонить
                 </button>
               </div>
             </div>
           ))}
         </section>
         <section style={{ marginBottom: '2rem' }}>
-          <h2>Upload Banner</h2>
+          <h2>Загрузка баннера</h2>
           <form onSubmit={handleBannerSubmit} className="card" style={{ padding: '1rem' }}>
             <div style={{ marginBottom: '0.5rem' }}>
               <label>
-                Title
+                Заголовок
                 <br />
                 <input
                   type="text"
@@ -115,7 +115,7 @@ export default function AdminPage() {
             </div>
             <div style={{ marginBottom: '0.5rem' }}>
               <label>
-                Subtitle
+                Подзаголовок
                 <br />
                 <input
                   type="text"
@@ -127,7 +127,7 @@ export default function AdminPage() {
             </div>
             <div style={{ marginBottom: '0.5rem' }}>
               <label>
-                Link URL
+                Ссылка
                 <br />
                 <input
                   type="url"
@@ -139,7 +139,7 @@ export default function AdminPage() {
             </div>
             <div style={{ marginBottom: '0.5rem' }}>
               <label>
-                Image
+                Картинка
                 <br />
                 <input
                   type="file"
@@ -149,17 +149,17 @@ export default function AdminPage() {
               </label>
             </div>
             <button type="submit" style={{ padding: '0.5rem 1rem', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: '4px' }}>
-              Save Banner
+              Сохранить баннер
             </button>
           </form>
         </section>
         <section style={{ marginBottom: '2rem' }}>
-          <h2>Upload TGS Animation</h2>
-          <p>Use this section to upload animated stickers in .tgs format. Please ensure the file meets Telegram's requirements (512×512 px, ≤ 3 sec, 60 fps).</p>
+          <h2>Загрузка TGS‑анимации</h2>
+          <p>Используйте этот раздел для загрузки анимированных стикеров в формате .tgs. Убедитесь, что файл соответствует требованиям Telegram (512×512 px, ≤ 3 сек, 60 fps).</p>
           <div className="card" style={{ padding: '1rem' }}>
             <input type="file" accept="application/x-tgsticker" />
             <button disabled style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: '4px' }}>
-              Upload (placeholder)
+              Загрузить (заглушка)
             </button>
           </div>
         </section>

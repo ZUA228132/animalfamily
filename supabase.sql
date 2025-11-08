@@ -38,6 +38,7 @@ create table if not exists public.announcements (
   user_id uuid references public.users (id) on delete cascade,
   title text not null,
   description text,
+  image_url text,
   -- Use geography(Point) to represent the announcement's location.
   location geography(Point),
   status text not null default 'pending' check (status in ('pending','published','rejected')),

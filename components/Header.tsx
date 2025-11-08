@@ -10,9 +10,9 @@ export default function Header() {
     <header className="header">
       <h1>Animal Family</h1>
       {user?.first_name ? (
-        <p>Welcome, {user.first_name}!</p>
+        <p>Привет, {user.first_name}!</p>
       ) : (
-        <p>Your pet community in Telegram</p>
+        <p>Сообщество любителей животных</p>
       )}
     </header>
   );

@@ -13,19 +13,19 @@ export default function FooterNav() {
   return (
     <nav className="footer-nav">
       <Link href="/" className={currentPath === '/' ? 'active' : ''}>
-        Home
+        Главная
       </Link>
       <Link
         href="/announcements"
         className={currentPath === '/announcements' ? 'active' : ''}
       >
-        Announcements
+        Объявления
       </Link>
       <Link
         href="/create"
         className={currentPath === '/create' ? 'active' : ''}
       >
-        Add
+        Создать
       </Link>
       {/* The Admin link is hidden by default.  To expose it in your
           deployment set NEXT_PUBLIC_SHOW_ADMIN_NAV to 'true'. */}
@@ -34,7 +34,7 @@ export default function FooterNav() {
           href="/admin"
           className={currentPath === '/admin' ? 'active' : ''}
         >
-          Admin
+          Админ
         </Link>
       )}
     </nav>

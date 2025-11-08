@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import FooterNav from '../components/FooterNav';
 import Header from '../components/Header';
 import { supabase } from '../lib/supabaseClient';
-import Link from 'next/link';
+import AnnouncementCard from '../components/AnnouncementCard';
 
 interface Announcement {
-  id: number;
+  id: number | string;
   title: string;
   description: string;
   owner_username: string | null;
+  image_url?: string | null;
 }
 
 export default function AnnouncementsPage() {
@@ -19,7 +20,7 @@ export default function AnnouncementsPage() {
       try {
         const { data, error } = await supabase
           .from('announcements')
-          .select('id, title, description, users(username)')
+          .select('id, title, description, image_url, users(username)')
           .eq('status', 'published')
           .order('created_at', { ascending: false });
         if (error) {
@@ -31,6 +32,7 @@ export default function AnnouncementsPage() {
             title: ann.title,
             description: ann.description,
             owner_username: ann.users?.username ?? null,
+            image_url: ann.image_url ?? null,
           }));
           setAnnouncements(flat);
         }
@@ -45,22 +47,16 @@ export default function AnnouncementsPage() {
     <main>
       <Header />
       <div className="container">
-        <h2>Announcements</h2>
-        {announcements.length === 0 && <p>No announcements found.</p>}
+        <h2>Объявления</h2>
+        {announcements.length === 0 && <p>Объявления не найдены.</p>}
         {announcements.map((ann) => (
-          <div key={ann.id} className="card fade-in">
-            <h3>{ann.title}</h3>
-            <p>{ann.description}</p>
-            {ann.owner_username && (
-              <a
-                href={`https://t.me/${ann.owner_username}?text=Hello, I am interested in your announcement!`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Message owner
-              </a>
-            )}
-          </div>
+          <AnnouncementCard
+            key={ann.id}
+            title={ann.title}
+            description={ann.description}
+            ownerUsername={ann.owner_username}
+            imageUrl={ann.image_url}
+          />
         ))}
       </div>
       <FooterNav />
