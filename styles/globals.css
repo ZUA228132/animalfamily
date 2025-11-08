@@ -1,0 +1,139 @@
+/* Global styles for Animal Family Telegram Mini App */
+
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  height: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Pastel color palette variables */
+:root {
+  /* Pastel palette */
+  --color-bg: #faf8f4;
+  --color-primary: #a4c8e1; /* soft blue */
+  --color-secondary: #ffd9da; /* soft pink */
+  --color-accent: #c2e7da; /* mint */
+  --color-header: #fff9f7;
+  --color-card: #ffffff;
+  --color-text: #333333;
+  --nav-height: 60px;
+  --border-radius: 12px;
+  --shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+main {
+  padding-bottom: var(--nav-height);
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+.map-placeholder,
+.map-container {
+  width: 100%;
+  height: 220px;
+  background-color: var(--color-secondary);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+
+.card {
+  background-color: var(--color-card);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+
+.footer-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--nav-height);
+  background-color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  color: #fff;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  z-index: 10;
+}
+
+.footer-nav a {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem 0;
+  color: inherit;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.footer-nav a:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.footer-nav a.active {
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid #ffffff;
+}
+
+/* Header styling */
+.header {
+  width: 100%;
+  background: linear-gradient(120deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.header p {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
