@@ -4,6 +4,7 @@ import FooterNav from '../components/FooterNav';
 import Header from '../components/Header';
 import Banner from '../components/Banner';
 import { supabase } from '../lib/supabaseClient';
+import useTelegram from '../hooks/useTelegram';
 
 interface Announcement {
   id: number | string;
@@ -14,6 +15,8 @@ interface Announcement {
 
 export default function Home() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+
+  const { user } = useTelegram();
 
   // Load dynamic map component client‑side only
   const Map = dynamic(() => import('../components/Map'), {
@@ -71,6 +74,12 @@ export default function Home() {
         ) : (
           <div className="map-placeholder">Loading map…</div>
         )}
+        {/* Example prompt encouraging the user to create an announcement */}
+        <div className="card premium-info fade-in">
+          <h3>{user?.first_name ? `${user.first_name}, создайте своё объявление!` : 'Создайте своё объявление!'}</h3>
+          <p>Добавьте информацию о потерянном или найденном питомце и помогите ему найти дом.</p>
+          <a href="/create" className="cta-button">Создать объявление</a>
+        </div>
         <h2 style={{ marginTop: '1rem' }}>Последние объявления</h2>
         {announcements.length === 0 && (
           <p>Пока объявлений нет. Будьте первым!</p>

@@ -119,23 +119,26 @@ main {
   width: 100%;
   background: linear-gradient(120deg, var(--color-primary), var(--color-accent));
   color: #fff;
-  padding: 1rem;
+  padding: 0.75rem 0.5rem;
   text-align: center;
   position: sticky;
   top: 0;
   z-index: 5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 .header h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
 }
 
 .header p {
   margin: 0.2rem 0 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.8rem;
+  opacity: 0.85;
 }
 
 /* Simple fade‑in and slide‑up animation for cards and other elements */
@@ -153,6 +156,40 @@ main {
 .fade-in {
   animation: fadeInUp 0.5s ease-out forwards;
   opacity: 0;
+}
+
+/* Preloader overlay covers the entire screen while the app initializes */
+.preloader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, var(--color-primary), var(--color-accent));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+/* Spinner animation */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Announcement feed card similar to marketplace listings */
@@ -203,4 +240,37 @@ main {
 .announcement-content a:hover {
   background-color: var(--color-secondary);
   color: var(--color-text);
+}
+
+/* Premium info card on home page encouraging user to create an announcement */
+.premium-info {
+  background: linear-gradient(120deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  text-align: center;
+}
+
+.premium-info h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.premium-info p {
+  font-size: 0.9rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cta-button:hover {
+  background-color: var(--color-secondary);
+  color: #333;
 }

@@ -49,7 +49,8 @@ export default function CreateAnnouncementPage() {
       // Include location if available.  Supabase accepts GeoJSON objects
       // for geography(Point) columns.
       if (lat !== null && lng !== null) {
-        payload.location = { type: 'Point', coordinates: [lng, lat] };
+        // Supabase PostGIS geography columns accept WKT strings, e.g. 'POINT(lon lat)'
+        payload.location = `POINT(${lng} ${lat})`;
       }
       const { error } = await supabase.from('announcements').insert(payload);
       if (error) {
