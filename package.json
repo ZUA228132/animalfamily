@@ -21,6 +21,7 @@
     "typescript": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "@types/node": "latest"
+    "@types/node": "latest",
+    "@types/leaflet": "latest"
   }
 }
