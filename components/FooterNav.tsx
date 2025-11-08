@@ -21,9 +21,22 @@ export default function FooterNav() {
       >
         Announcements
       </Link>
-      <Link href="/admin" className={currentPath === '/admin' ? 'active' : ''}>
-        Admin
+      <Link
+        href="/create"
+        className={currentPath === '/create' ? 'active' : ''}
+      >
+        Add
       </Link>
+      {/* The Admin link is hidden by default.  To expose it in your
+          deployment set NEXT_PUBLIC_SHOW_ADMIN_NAV to 'true'. */}
+      {process.env.NEXT_PUBLIC_SHOW_ADMIN_NAV === 'true' && (
+        <Link
+          href="/admin"
+          className={currentPath === '/admin' ? 'active' : ''}
+        >
+          Admin
+        </Link>
+      )}
     </nav>
   );
 }

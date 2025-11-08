@@ -6,9 +6,10 @@ import Banner from '../components/Banner';
 import { supabase } from '../lib/supabaseClient';
 
 interface Announcement {
-  id: number;
+  id: number | string;
   title: string;
   description: string;
+  location?: any;
 }
 
 export default function Home() {
@@ -26,7 +27,7 @@ export default function Home() {
       try {
         const { data, error } = await supabase
           .from('announcements')
-          .select('id, title, description')
+          .select('id, title, description, location')
           .eq('status', 'published')
           .order('created_at', { ascending: false })
           .limit(5);
@@ -57,10 +58,15 @@ export default function Home() {
         {/* Map component */}
         {typeof window !== 'undefined' ? (
           <Map
-            markers={announcements.map((ann) => ({
-              position: [52.3676, 4.9041] as [number, number],
-              label: ann.title,
-            }))}
+            markers={announcements
+              .filter((ann) => ann.location && ann.location.coordinates)
+              .map((ann) => ({
+                position: [
+                  ann.location.coordinates[1],
+                  ann.location.coordinates[0],
+                ] as [number, number],
+                label: ann.title,
+              }))}
           />
         ) : (
           <div className="map-placeholder">Loading map…</div>
@@ -70,7 +76,7 @@ export default function Home() {
           <p>No announcements available yet. Be the first to post!</p>
         )}
         {announcements.map((ann) => (
-          <div key={ann.id} className="card">
+          <div key={ann.id} className="card fade-in">
             <h3>{ann.title}</h3>
             <p>{ann.description}</p>
           </div>

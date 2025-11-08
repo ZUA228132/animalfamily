@@ -31,7 +31,11 @@ create table if not exists public.users (
 -- point to enable distance queries.
 create table if not exists public.announcements (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.users (id) on delete cascade,
+  -- user_id references the owner of the announcement.  It is optional
+  -- because the web client may insert announcements before the user
+  -- has authenticated.  For authenticated users Supabase assigns
+  -- auth.uid() automatically via RLS policies.
+  user_id uuid references public.users (id) on delete cascade,
   title text not null,
   description text,
   -- Use geography(Point) to represent the announcement's location.

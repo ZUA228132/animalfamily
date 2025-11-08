@@ -48,7 +48,7 @@ export default function AnnouncementsPage() {
         <h2>Announcements</h2>
         {announcements.length === 0 && <p>No announcements found.</p>}
         {announcements.map((ann) => (
-          <div key={ann.id} className="card">
+          <div key={ann.id} className="card fade-in">
             <h3>{ann.title}</h3>
             <p>{ann.description}</p>
             {ann.owner_username && (

@@ -10,6 +10,22 @@ interface PendingAnnouncement {
 }
 
 export default function AdminPage() {
+  // Protect the admin page from public access.  By default the
+  // admin panel is hidden unless the NEXT_PUBLIC_SHOW_ADMIN_NAV
+  // environment variable is set to 'true'.  Adjust this logic to
+  // integrate with your own auth system.
+  if (process.env.NEXT_PUBLIC_SHOW_ADMIN_NAV !== 'true') {
+    return (
+      <main>
+        <Header />
+        <div className="container">
+          <h2>Admin Panel</h2>
+          <p>You do not have permission to view this page.</p>
+        </div>
+        <FooterNav />
+      </main>
+    );
+  }
   const [pending, setPending] = useState<PendingAnnouncement[]>([]);
   const [bannerTitle, setBannerTitle] = useState('');
   const [bannerSubtitle, setBannerSubtitle] = useState('');
