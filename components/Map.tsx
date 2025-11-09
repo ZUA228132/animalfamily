@@ -10,7 +10,7 @@ interface MapProps {
   markers?: { position: LatLngExpression; label: string }[];
   /**
    * Optional initial map centre.  If omitted, the map defaults to
-   * Amsterdam coordinates.
+   * Rostov-on-Don coordinates.
    */
   center?: [number, number];
   /**
@@ -24,8 +24,8 @@ interface MapProps {
  * with positions and labels and renders them on an OpenStreetMap base layer.
  */
 export default function Map({ markers = [], center, zoom }: MapProps) {
-  // Default centre is Amsterdam if none provided
-  const defaultCenter: LatLngExpression = [52.3676, 4.9041];
+  // Default centre is Rostov-on-Don if none provided
+  const defaultCenter: LatLngExpression = [47.2357, 39.7015];
   const mapCenter: LatLngExpression = center ?? defaultCenter;
   const mapZoom = zoom ?? 12;
   return (

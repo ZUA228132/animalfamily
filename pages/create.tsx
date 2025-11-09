@@ -16,6 +16,7 @@ export default function CreateAnnouncementPage() {
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const Map = dynamic(() => import('../components/Map'), { ssr: false });
 
   useEffect(() => {
@@ -41,13 +42,33 @@ export default function CreateAnnouncementPage() {
     }
     setSubmitting(true);
     try {
+      let imageUrl: string | null = null;
+      // If a photo has been selected, upload it to Supabase Storage
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop() || 'jpg';
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+        const filePath = `public/${fileName}`;
+        const { error: uploadError } = await supabase.storage
+          .from('announcements')
+          .upload(filePath, imageFile);
+        if (uploadError) {
+          alert('Не удалось загрузить фото: ' + uploadError.message);
+        } else {
+          const { data: publicUrlData } = supabase.storage
+            .from('announcements')
+            .getPublicUrl(filePath);
+          imageUrl = publicUrlData?.publicUrl || null;
+        }
+      }
       const payload: any = {
         title,
         description,
         status: 'pending',
       };
+      if (imageUrl) {
+        payload.image_url = imageUrl;
+      }
       // Include location if available.  Supabase accepts GeoJSON objects
-      // for geography(Point) columns.
       if (lat !== null && lng !== null) {
         // Supabase PostGIS geography columns accept WKT strings, e.g. 'POINT(lon lat)'
         payload.location = `POINT(${lng} ${lat})`;
@@ -96,6 +117,20 @@ export default function CreateAnnouncementPage() {
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
                 style={{ width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid #ccc' }}
+              />
+            </label>
+          </div>
+          <div style={{ marginBottom: '0.5rem' }}>
+            <label>
+              Фото питомца
+              <br />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setImageFile(file);
+                }}
               />
             </label>
           </div>

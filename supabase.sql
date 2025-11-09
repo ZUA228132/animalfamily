@@ -116,10 +116,11 @@ create policy "Announcements: Published read" on public.announcements
 -- Owners can read their pending announcements too
 create policy "Announcements: Owner read" on public.announcements
   for select using (auth.uid() = user_id);
--- Owners can insert new announcements
-create policy "Announcements: Owner insert" on public.announcements
-  for insert with check (auth.uid() = user_id);
--- Owners can update their announcements (e.g. edit or delete)
+-- Allow anyone (even anonymous visitors) to insert new announcements.
+-- They are created with status = 'pending' and later moderated in the admin panel.
+create policy "Announcements: Public insert" on public.announcements
+  for insert with check (status = 'pending');
+-- Owners can update their announcements (e.g. edit or delete) once you wire auth to Supabase.
 create policy "Announcements: Owner update" on public.announcements
   for update using (auth.uid() = user_id);
 create policy "Announcements: Owner delete" on public.announcements
