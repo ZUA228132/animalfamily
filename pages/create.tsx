@@ -5,9 +5,9 @@ import FooterNav from '../components/FooterNav';
 import dynamic from 'next/dynamic';
 
 /**
- * Page for creating a new announcement.  Users can enter a title and
+ * Page for creating a new announcement. Users can enter a title and
  * description and, if they grant location permission, their current
- * location will be used for the announcement.  Submissions are saved
+ * location will be used for the announcement. Submissions are saved
  * with a status of 'pending' until an admin approves them.
  */
 export default function CreateAnnouncementPage() {
@@ -17,6 +17,7 @@ export default function CreateAnnouncementPage() {
   const [lng, setLng] = useState<number | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
   const Map = dynamic(() => import('../components/Map'), { ssr: false });
 
   useEffect(() => {
@@ -34,68 +35,74 @@ export default function CreateAnnouncementPage() {
     }
   }, []);
 
-async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  if (!title) {
-    alert('Пожалуйста, укажите заголовок объявления.');
-    return;
-  }
-  setSubmitting(true);
-  try {
-    let imageUrl: string | null = null;
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
 
-    // Если выбрано фото — загружаем его в Supabase Storage (bucket "announcements")
-    if (imageFile) {
-      const fileExt = imageFile.name.split('.').pop() || 'jpg';
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
-      const filePath = `announcements/${fileName}`;
-      const { error: uploadError } = await supabase.storage
-        .from('announcements')
-        .upload(filePath, imageFile);
+    if (!title) {
+      alert('Пожалуйста, укажите заголовок объявления.');
+      return;
+    }
 
-      if (uploadError) {
-        console.error(uploadError);
-        alert('Не удалось загрузить фото: ' + uploadError.message);
-      } else {
-        const { data: publicData } = supabase.storage
+    setSubmitting(true);
+
+    try {
+      let imageUrl: string | null = null;
+
+      // Если выбрано фото — загружаем его в Supabase Storage (bucket "announcements")
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop() || 'jpg';
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+        const filePath = `announcements/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
           .from('announcements')
-          .getPublicUrl(filePath);
-        imageUrl = publicData?.publicUrl ?? null;
+          .upload(filePath, imageFile);
+
+        if (uploadError) {
+          console.error(uploadError);
+          alert('Не удалось загрузить фото: ' + uploadError.message);
+        } else {
+          const { data: publicData } = supabase.storage
+            .from('announcements')
+            .getPublicUrl(filePath);
+          imageUrl = publicData?.publicUrl ?? null;
+        }
       }
-    }
 
-    const payload: any = {
-      title,
-      description,
-      status: 'pending',
-    };
-    if (imageUrl) {
-      payload.image_url = imageUrl;
-    }
-    // Include location if available.  Supabase accepts GeoJSON objects
-    // for geography(Point) columns.
-    if (lat !== null && lng !== null) {
-      // Supabase PostGIS geography columns accept WKT strings, e.g. 'POINT(lon lat)'
-      payload.location = `POINT(${lng} ${lat})`;
-    }
+      const payload: any = {
+        title,
+        description,
+        status: 'pending',
+      };
 
-    const { error } = await supabase.from('announcements').insert(payload);
-    if (error) {
-      console.error('Error inserting announcement:', error.message);
-      alert('Не удалось сохранить объявление: ' + error.message);
-    } else {
-      alert('Объявление отправлено на модерацию!');
-      setTitle('');
-      setDescription('');
-      setImageFile(null);
+      if (imageUrl) {
+        payload.image_url = imageUrl;
+      }
+
+      // Include location if available. Supabase accepts WKT strings
+      // for geography(Point) columns, e.g. 'POINT(lon lat)'.
+      if (lat !== null && lng !== null) {
+        payload.location = `POINT(${lng} ${lat})`;
+      }
+
+      const { error } = await supabase.from('announcements').insert(payload);
+
+      if (error) {
+        console.error('Error inserting announcement:', error.message);
+        alert('Не удалось сохранить объявление: ' + error.message);
+      } else {
+        alert('Объявление отправлено на модерацию!');
+        setTitle('');
+        setDescription('');
+        setImageFile(null);
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert('An unexpected error occurred.');
+    } finally {
+      setSubmitting(false);
     }
-  } catch (err: any) {
-    console.error(err);
-    alert('An unexpected error occurred.');
-  } finally {
-    setSubmitting(false);
-  }
-}  }
+  };
 
   return (
     <main>
@@ -112,10 +119,16 @@ async function handleSubmit(e: React.FormEvent) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                style={{ width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                style={{
+                  width: '100%',
+                  padding: '0.4rem',
+                  borderRadius: '4px',
+                  border: '1px solid #ccc',
+                }}
               />
             </label>
           </div>
+
           <div style={{ marginBottom: '0.5rem' }}>
             <label>
               Описание
@@ -124,7 +137,12 @@ async function handleSubmit(e: React.FormEvent) {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                style={{ width: '100%', padding: '0.4rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                style={{
+                  width: '100%',
+                  padding: '0.4rem',
+                  borderRadius: '4px',
+                  border: '1px solid #ccc',
+                }}
               />
             </label>
           </div>
@@ -147,7 +165,9 @@ async function handleSubmit(e: React.FormEvent) {
           <div style={{ marginBottom: '0.5rem' }}>
             {lat !== null && lng !== null ? (
               <>
-                <p>Ваше местоположение: {lat.toFixed(5)}, {lng.toFixed(5)}</p>
+                <p>
+                  Ваше местоположение: {lat.toFixed(5)}, {lng.toFixed(5)}
+                </p>
                 {/* Show a small map with the user's location */}
                 <div style={{ height: '200px', borderRadius: '8px', overflow: 'hidden' }}>
                   <Map
@@ -160,10 +180,17 @@ async function handleSubmit(e: React.FormEvent) {
               <p>Разрешите доступ к геолокации, чтобы добавить вашу позицию.</p>
             )}
           </div>
+
           <button
             type="submit"
             disabled={submitting}
-            style={{ padding: '0.5rem 1rem', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: '4px' }}
+            style={{
+              padding: '0.5rem 1rem',
+              background: 'var(--color-primary)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '4px',
+            }}
           >
             {submitting ? 'Отправка…' : 'Отправить'}
           </button>
