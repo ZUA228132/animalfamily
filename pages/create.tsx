@@ -129,20 +129,21 @@ async function handleSubmit(e: React.FormEvent) {
             </label>
           </div>
 
-<div style={{ marginBottom: '0.5rem' }}>
-  <label>
-    Фото питомца (необязательно)
-    <br />
-    <input
-      type="file"
-      accept="image/*"
-      onChange={(e) => {
-        const file = e.target.files?.[0] || null;
-        setImageFile(file);
-      }}
-    />
-  </label>
-</div>
+          <div style={{ marginBottom: '0.5rem' }}>
+            <label>
+              Фото питомца (необязательно)
+              <br />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setImageFile(file);
+                }}
+              />
+            </label>
+          </div>
+
           <div style={{ marginBottom: '0.5rem' }}>
             {lat !== null && lng !== null ? (
               <>
