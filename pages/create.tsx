@@ -15,8 +15,8 @@ export default function CreateAnnouncementPage() {
   const [description, setDescription] = useState('');
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
-  const [submitting, setSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const Map = dynamic(() => import('../components/Map'), { ssr: false });
 
   useEffect(() => {
@@ -34,60 +34,68 @@ export default function CreateAnnouncementPage() {
     }
   }, []);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!title) {
-      alert('Пожалуйста, укажите заголовок объявления.');
-      return;
-    }
-    setSubmitting(true);
-    try {
-      let imageUrl: string | null = null;
-      // If a photo has been selected, upload it to Supabase Storage
-      if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop() || 'jpg';
-        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
-        const filePath = `public/${fileName}`;
-        const { error: uploadError } = await supabase.storage
-          .from('announcements')
-          .upload(filePath, imageFile);
-        if (uploadError) {
-          alert('Не удалось загрузить фото: ' + uploadError.message);
-        } else {
-          const { data: publicUrlData } = supabase.storage
-            .from('announcements')
-            .getPublicUrl(filePath);
-          imageUrl = publicUrlData?.publicUrl || null;
-        }
-      }
-      const payload: any = {
-        title,
-        description,
-        status: 'pending',
-      };
-      if (imageUrl) {
-        payload.image_url = imageUrl;
-      }
-      // Include location if available.  Supabase accepts GeoJSON objects
-      if (lat !== null && lng !== null) {
-        // Supabase PostGIS geography columns accept WKT strings, e.g. 'POINT(lon lat)'
-        payload.location = `POINT(${lng} ${lat})`;
-      }
-      const { error } = await supabase.from('announcements').insert(payload);
-      if (error) {
-        alert('Не удалось сохранить объявление: ' + error.message);
-      } else {
-        alert('Объявление отправлено на модерацию. Спасибо!');
-        setTitle('');
-        setDescription('');
-      }
-    } catch (err: any) {
-      console.error(err);
-      alert('An unexpected error occurred.');
-    } finally {
-      setSubmitting(false);
-    }
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  if (!title) {
+    alert('Пожалуйста, укажите заголовок объявления.');
+    return;
   }
+  setSubmitting(true);
+  try {
+    let imageUrl: string | null = null;
+
+    // Если выбрано фото — загружаем его в Supabase Storage (bucket "announcements")
+    if (imageFile) {
+      const fileExt = imageFile.name.split('.').pop() || 'jpg';
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+      const filePath = `announcements/${fileName}`;
+      const { error: uploadError } = await supabase.storage
+        .from('announcements')
+        .upload(filePath, imageFile);
+
+      if (uploadError) {
+        console.error(uploadError);
+        alert('Не удалось загрузить фото: ' + uploadError.message);
+      } else {
+        const { data: publicData } = supabase.storage
+          .from('announcements')
+          .getPublicUrl(filePath);
+        imageUrl = publicData?.publicUrl ?? null;
+      }
+    }
+
+    const payload: any = {
+      title,
+      description,
+      status: 'pending',
+    };
+    if (imageUrl) {
+      payload.image_url = imageUrl;
+    }
+    // Include location if available.  Supabase accepts GeoJSON objects
+    // for geography(Point) columns.
+    if (lat !== null && lng !== null) {
+      // Supabase PostGIS geography columns accept WKT strings, e.g. 'POINT(lon lat)'
+      payload.location = `POINT(${lng} ${lat})`;
+    }
+
+    const { error } = await supabase.from('announcements').insert(payload);
+    if (error) {
+      console.error('Error inserting announcement:', error.message);
+      alert('Не удалось сохранить объявление: ' + error.message);
+    } else {
+      alert('Объявление отправлено на модерацию!');
+      setTitle('');
+      setDescription('');
+      setImageFile(null);
+    }
+  } catch (err: any) {
+    console.error(err);
+    alert('An unexpected error occurred.');
+  } finally {
+    setSubmitting(false);
+  }
+}  }
 
   return (
     <main>
@@ -120,20 +128,21 @@ export default function CreateAnnouncementPage() {
               />
             </label>
           </div>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label>
-              Фото питомца
-              <br />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0] || null;
-                  setImageFile(file);
-                }}
-              />
-            </label>
-          </div>
+
+<div style={{ marginBottom: '0.5rem' }}>
+  <label>
+    Фото питомца (необязательно)
+    <br />
+    <input
+      type="file"
+      accept="image/*"
+      onChange={(e) => {
+        const file = e.target.files?.[0] || null;
+        setImageFile(file);
+      }}
+    />
+  </label>
+</div>
           <div style={{ marginBottom: '0.5rem' }}>
             {lat !== null && lng !== null ? (
               <>

@@ -27,6 +27,13 @@ export default function FooterNav() {
       >
         Создать
       </Link>
+
+<Link
+  href="/cabinet"
+  className={currentPath === '/cabinet' ? 'active' : ''}
+>
+  Кабинет
+</Link>
       {/* The Admin link is hidden by default.  To expose it in your
           deployment set NEXT_PUBLIC_SHOW_ADMIN_NAV to 'true'. */}
       {process.env.NEXT_PUBLIC_SHOW_ADMIN_NAV === 'true' && (

@@ -116,11 +116,13 @@ create policy "Announcements: Published read" on public.announcements
 -- Owners can read their pending announcements too
 create policy "Announcements: Owner read" on public.announcements
   for select using (auth.uid() = user_id);
--- Allow anyone (even anonymous visitors) to insert new announcements.
--- They are created with status = 'pending' and later moderated in the admin panel.
+-- Owners can insert new announcements
+create policy "Announcements: Owner insert" on public.announcements
+  for insert with check (auth.uid() = user_id);
+-- Allow anonymous/public inserts for pending announcements (for mini‑app visitors)
 create policy "Announcements: Public insert" on public.announcements
   for insert with check (status = 'pending');
--- Owners can update their announcements (e.g. edit or delete) once you wire auth to Supabase.
+-- Owners can update their announcements (e.g. edit or delete)
 create policy "Announcements: Owner update" on public.announcements
   for update using (auth.uid() = user_id);
 create policy "Announcements: Owner delete" on public.announcements
@@ -157,3 +159,26 @@ create policy "Alerts: Admin write" on public.alerts for all using (public.is_ad
 alter table public.banners enable row level security;
 create policy "Banners: Public read" on public.banners for select using (active);
 create policy "Banners: Admin write" on public.banners for all using (public.is_admin());
+
+-- Pet passports: digital profiles for pets linked to a Telegram user id.
+create table if not exists public.pet_passports (
+  id uuid primary key default gen_random_uuid(),
+  telegram_id text,
+  pet_name text not null,
+  date_of_birth date,
+  avatar_url text,
+  allergies text,
+  vaccinations text,
+  habits text,
+  additional_info text,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+alter table public.pet_passports enable row level security;
+create policy "Pet passports: Public read" on public.pet_passports
+  for select using (true);
+create policy "Pet passports: Public insert" on public.pet_passports
+  for insert with check (true);
+create policy "Pet passports: Public update" on public.pet_passports
+  for update using (true);

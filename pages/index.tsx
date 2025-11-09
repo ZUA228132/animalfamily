@@ -51,6 +51,10 @@ export default function Home() {
     <main>
       <Header />
       <div className="container">
+        {user?.first_name && (
+          <p className="greeting">Привет, {user.first_name}! 🐾</p>
+        )}
+
         {/* Banner placeholder. In production you would fetch banner data from Supabase. */}
         <Banner
           title="Помогите найти дом"

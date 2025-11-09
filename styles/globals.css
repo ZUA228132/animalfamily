@@ -1,26 +1,26 @@
-/* Global styles for Animal Family Telegram Mini App */
-
-/* Brand font: FOT-Greco Std.
-   To use it in production, self‑host the font files and extend the src
-   declaration below with your URLs (e.g. woff2/woff). */
+/* Custom font: FOT-Greco Std.
+   NOTE: add the actual font files into /public/fonts and update the src URLs below. */
 @font-face {
   font-family: 'FOT-Greco Std';
-  src: local('FOT-Greco Std');
+  src: local('FOT-Greco Std'),
+       url('/fonts/FOT-Greco-Std.woff2') format('woff2'),
+       url('/fonts/FOT-Greco-Std.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
+/* Global styles for Animal Family Telegram Mini App */
+
 html, body {
   padding: 0;
   margin: 0;
-  font-family: 'FOT-Greco Std', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'FOT-Greco Std', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
   height: 100%;
 }
-
 
 a {
   color: inherit;
@@ -33,12 +33,12 @@ a {
 
 /* Pastel color palette variables */
 :root {
-  /* Brand palette: https://coolors.co/palette/0081a7-00afb9-fdfcdc-fed9b7-f07167 */
-  --color-bg: #FDFCDC;        /* soft warm background */
-  --color-primary: #0081A7;   /* deep teal */
-  --color-secondary: #00AFB9; /* bright aqua */
-  --color-accent: #F07167;    /* coral accent */
-  --color-header: #FED9B7;    /* peach header / highlights */
+  /* Brand palette from https://coolors.co/palette/0081a7-00afb9-fdfcdc-fed9b7-f07167 */
+  --color-bg: #FDFCDC;
+  --color-primary: #0081A7;
+  --color-secondary: #00AFB9;
+  --color-accent: #F07167;
+  --color-header: #FED9B7;
   --color-card: #ffffff;
   --color-text: #333333;
   --nav-height: 60px;
