@@ -182,3 +182,40 @@ create policy "Pet passports: Public insert" on public.pet_passports
   for insert with check (true);
 create policy "Pet passports: Public update" on public.pet_passports
   for update using (true);
+
+
+-- User profiles table to bind Telegram id to city and basic info.
+create table if not exists public.user_profiles (
+  telegram_id text primary key,
+  city text,
+  full_name text,
+  username text,
+  avatar_url text,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+alter table public.user_profiles enable row level security;
+create policy "User profiles: Public read" on public.user_profiles
+  for select using (true);
+create policy "User profiles: Public insert" on public.user_profiles
+  for insert with check (true);
+create policy "User profiles: Public update" on public.user_profiles
+  for update using (true);
+
+
+-- Admins table: list of Telegram ids that have admin rights in the mini-app UI.
+create table if not exists public.admins (
+  id uuid primary key default gen_random_uuid(),
+  telegram_id text unique not null,
+  full_name text,
+  created_at timestamp with time zone default now()
+);
+
+alter table public.admins enable row level security;
+-- Anyone can read the list of admins (used by the client to check access),
+-- but only the service_role (Supabase dashboard / SQL) can modify it.
+create policy "Admins: Public read" on public.admins
+  for select using (true);
+create policy "Admins: Service write" on public.admins
+  for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');

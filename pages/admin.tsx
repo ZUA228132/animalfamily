@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import FooterNav from '../components/FooterNav';
 import Header from '../components/Header';
 import { supabase } from '../lib/supabaseClient';
+import useTelegram from '../hooks/useTelegram';
 
 interface PendingAnnouncement {
   id: number;
@@ -10,22 +11,10 @@ interface PendingAnnouncement {
 }
 
 export default function AdminPage() {
-  // Protect the admin page from public access.  By default the
-  // admin panel is hidden unless the NEXT_PUBLIC_SHOW_ADMIN_NAV
-  // environment variable is set to 'true'.  Adjust this logic to
-  // integrate with your own auth system.
-  if (process.env.NEXT_PUBLIC_SHOW_ADMIN_NAV !== 'true') {
-    return (
-      <main>
-        <Header />
-        <div className="container">
-          <h2>Админ панель</h2>
-          <p>У вас нет доступа к этой странице.</p>
-        </div>
-        <FooterNav />
-      </main>
-    );
-  }
+
+  const { user } = useTelegram();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminChecked, setAdminChecked] = useState(false);
   const [pending, setPending] = useState<PendingAnnouncement[]>([]);
   const [bannerTitle, setBannerTitle] = useState('');
   const [bannerSubtitle, setBannerSubtitle] = useState('');
@@ -75,6 +64,32 @@ export default function AdminPage() {
     setBannerImage(null);
     alert('Banner saved (simulation)');
   };
+
+if (!adminChecked) {
+  return (
+    <main>
+      <Header />
+      <div className="container">
+        <h2>Админ панель</h2>
+        <p>Проверяем права доступа…</p>
+      </div>
+      <FooterNav />
+    </main>
+  );
+}
+
+if (!isAdmin) {
+  return (
+    <main>
+      <Header />
+      <div className="container">
+        <h2>Админ панель</h2>
+        <p>У вас нет доступа к этой странице.</p>
+      </div>
+      <FooterNav />
+    </main>
+  );
+}
 
   return (
     <main>
